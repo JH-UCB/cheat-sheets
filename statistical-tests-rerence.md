@@ -1,81 +1,92 @@
 # Statistical Tests Reference for Data Science and Machine Learning
 
+## Tests for Comparing Means
+
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **One-sample t-test** | Compare sample mean to known value | μ = μ₀ | t = (x̄ - μ₀)/(s/√n)<br>where:<br>• x̄ = sample mean<br>• μ₀ = hypothesized mean<br>• s = sample std dev<br>• n = sample size | • Normal distribution<br>• Random sampling<br>• Continuous data | Testing if average customer satisfaction differs from industry standard of 7.5 |
+| **Independent samples t-test** | Compare means of two independent groups | μ₁ = μ₂ | t = (x̄₁ - x̄₂)/√(sp²(1/n₁ + 1/n₂))<br>where:<br>• sp² = pooled variance<br>• n₁, n₂ = sample sizes | • Normal distribution<br>• Equal variances<br>• Independent samples<br>• Continuous data | Comparing conversion rates between A/B test groups |
+| **Welch's t-test** | Compare means when variances unequal | μ₁ = μ₂ | t = (x̄₁ - x̄₂)/√(s₁²/n₁ + s₂²/n₂)<br>where:<br>• s₁², s₂² = sample variances | • Normal distribution<br>• Unequal variances<br>• Independent samples | Comparing salaries between two departments with different variability |
+| **Paired t-test** | Compare means of paired/matched samples | μd = 0 | t = d̄/(sd/√n)<br>where:<br>• d̄ = mean difference<br>• sd = std dev of differences | • Normal distribution of differences<br>• Paired observations | Before/after treatment effects in same subjects |
+| **One-way ANOVA** | Compare means across 3+ groups | μ₁ = μ₂ = ... = μk | F = MSB/MSW<br>where:<br>• MSB = between-group variance<br>• MSW = within-group variance<br>• k = number of groups | • Normal distribution<br>• Equal variances<br>• Independent samples | Comparing model performance across multiple algorithms |
+| **Two-way ANOVA** | Test main effects and interactions | No main effects or interactions | F = MS(effect)/MS(error)<br>for each effect | • Normal distribution<br>• Equal variances<br>• Balanced design | Testing effects of hyperparameters and data size on model accuracy |
+| **Repeated Measures ANOVA** | Compare means across repeated measurements | μ₁ = μ₂ = ... = μk | F = MS(treatment)/MS(error)<br>with adjusted df | • Sphericity<br>• Normal distribution<br>• No missing data | Tracking model performance over multiple time periods |
+| **MANOVA** | Compare multiple dependent variables | μ₁ = μ₂ = ... = μk<br>(vector equality) | Wilks' Λ, Pillai's trace, etc. | • Multivariate normality<br>• Equal covariance matrices | Comparing multiple metrics (precision, recall, F1) across models |
+
+## Non-parametric Tests for Location
+
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **Mann-Whitney U test** | Compare two independent groups (non-parametric) | Distributions are identical | U = min(U₁, U₂)<br>where U₁, U₂ are rank sums | • Independent samples<br>• Ordinal or continuous data<br>• Similar distribution shapes | Comparing user ratings (1-5 scale) between two app versions |
+| **Wilcoxon signed-rank test** | Compare paired samples (non-parametric) | Median difference = 0 | W = min(W⁺, W⁻)<br>where W⁺, W⁻ are positive/negative rank sums | • Paired samples<br>• Ordinal or continuous<br>• Symmetric differences | Comparing algorithm rankings before/after optimization |
+| **Kruskal-Wallis test** | Compare 3+ groups (non-parametric) | All groups have same distribution | H = (12/n(n+1))∑(Ri²/ni) - 3(n+1)<br>where:<br>• Ri = rank sum for group i<br>• ni = size of group i | • Independent samples<br>• Ordinal or continuous | Comparing customer satisfaction across multiple product versions |
+| **Friedman test** | Compare 3+ related groups | All treatments have same effect | χ²r = (12/nk(k+1))∑Ri² - 3n(k+1)<br>where:<br>• k = number of treatments<br>• Ri = rank sum for treatment i | • Related samples<br>• Ordinal or continuous | Comparing multiple algorithms on same datasets |
+
+## Tests for Proportions and Categorical Data
+
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **One-proportion z-test** | Test if proportion equals hypothesized value | p = p₀ | z = (p̂ - p₀)/√(p₀(1-p₀)/n)<br>where:<br>• p̂ = sample proportion<br>• p₀ = hypothesized proportion | • Large sample (np₀ ≥ 10, n(1-p₀) ≥ 10)<br>• Random sampling | Testing if model accuracy exceeds 90% benchmark |
+| **Two-proportion z-test** | Compare two proportions | p₁ = p₂ | z = (p̂₁ - p̂₂)/√(p̂(1-p̂)(1/n₁ + 1/n₂))<br>where p̂ = pooled proportion | • Large samples<br>• Independent groups | Comparing click-through rates between two ad campaigns |
+| **Chi-square test of independence** | Test association between categorical variables | Variables are independent | χ² = ∑((O - E)²/E)<br>where:<br>• O = observed frequency<br>• E = expected frequency | • Expected frequencies ≥ 5<br>• Independent observations | Testing if feature selection method affects model type choice |
+| **Chi-square goodness of fit** | Test if data follows expected distribution | Data follows specified distribution | χ² = ∑((O - E)²/E) | • Expected frequencies ≥ 5<br>• Categories are exhaustive | Testing if errors follow normal distribution |
+| **Fisher's exact test** | Test association (small samples) | Variables are independent | Based on hypergeometric distribution | • 2×2 contingency table<br>• Fixed marginals | Testing if rare event occurrence differs between two models |
+| **McNemar's test** | Compare paired proportions | p₁ = p₂ (marginal homogeneity) | χ² = (b - c)²/(b + c)<br>where b, c are discordant pairs | • Paired binary data<br>• Large sample | Comparing classification accuracy on same test set |
+
+## Tests for Correlation and Association
+
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **Pearson correlation test** | Test linear correlation | ρ = 0 | t = r√(n-2)/√(1-r²)<br>where:<br>• r = sample correlation<br>• n = sample size | • Bivariate normal<br>• Linear relationship<br>• Continuous variables | Testing if feature importance correlates with coefficient magnitude |
+| **Spearman rank correlation** | Test monotonic relationship | ρs = 0 | Similar to Pearson on ranks | • Ordinal or continuous<br>• Monotonic relationship | Testing if model complexity relates to training time |
+| **Kendall's tau** | Test ordinal association | τ = 0 | z = τ/√(2(2n+5)/9n(n-1)) | • Ordinal data<br>• Many ties handled well | Testing agreement between two ranking algorithms |
+| **Partial correlation test** | Test correlation controlling for other variables | ρxy.z = 0 | t = rxy.z√(n-k-2)/√(1-r²xy.z)<br>where k = number controlled | • Multivariate normal<br>• Linear relationships | Testing feature correlation after controlling for confounders |
+
+## Tests for Variance and Distribution
+
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **F-test for variances** | Compare two variances | σ₁² = σ₂² | F = s₁²/s₂²<br>where s₁² > s₂² | • Normal distributions<br>• Independent samples | Testing if two models have equal prediction variance |
+| **Levene's test** | Test equality of variances (robust) | σ₁² = σ₂² = ... = σk² | F based on absolute deviations | • Independent samples<br>• Any distribution | Checking ANOVA assumption of equal variances |
+| **Bartlett's test** | Test equality of variances | σ₁² = σ₂² = ... = σk² | χ² statistic | • Normal distributions<br>• Sensitive to non-normality | Testing homoscedasticity in regression residuals |
+| **Brown-Forsythe test** | Test equality of variances (very robust) | σ₁² = σ₂² = ... = σk² | F based on median deviations | • Independent samples<br>• Robust to outliers | Testing variance equality with skewed distributions |
+
 ## Normality Tests
 
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **Shapiro-Wilk Test** | Tests if data follows normal distribution<br>H₀: Data is normally distributed<br>H₁: Data is not normally distributed | • Sample size: 3 ≤ n ≤ 5000<br>• Continuous data<br>• Independent observations | • Checking normality assumption before parametric tests<br>• Best for small samples | Testing if model residuals are normally distributed before linear regression |
-| **Kolmogorov-Smirnov Test** | Tests if data follows a specified distribution<br>H₀: Data follows specified distribution<br>H₁: Data does not follow specified distribution | • Continuous data<br>• Large sample size (n > 50)<br>• Known distribution parameters | • Comparing sample to any continuous distribution<br>• Large datasets | Verifying if feature distributions match between train and test sets |
-| **Anderson-Darling Test** | Tests if data comes from specified distribution<br>H₀: Data comes from specified distribution<br>H₁: Data does not come from specified distribution | • Continuous data<br>• More weight on tails than K-S<br>• Sample size > 5 | • More sensitive to deviations in tails<br>• Quality control applications | Checking if log-transformed features follow normal distribution |
-| **D'Agostino-Pearson Test** | Omnibus test for normality using skewness and kurtosis<br>H₀: Data is normally distributed<br>H₁: Data is not normally distributed | • Sample size n ≥ 20<br>• Tests both skewness and kurtosis<br>• Continuous data | • When you need to understand why normality fails<br>• Medium to large samples | Assessing normality of neural network weight distributions |
-| **Q-Q Plot** | Visual assessment of normality<br>Not a formal test but diagnostic tool | • Any sample size<br>• Visual interpretation<br>• Shows where deviations occur | • Initial exploration<br>• Understanding nature of non-normality | Diagnosing distribution of prediction errors in regression models |
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **Shapiro-Wilk test** | Test for normality | Data is normally distributed | W statistic based on order statistics | • Best for small samples (n < 50)<br>• Continuous data | Testing if residuals are normally distributed |
+| **Kolmogorov-Smirnov test** | Test against any distribution | Data follows specified distribution | D = max|Fn(x) - F(x)|<br>where:<br>• Fn = empirical CDF<br>• F = theoretical CDF | • Continuous distribution<br>• Fully specified H₀ | Testing if data follows exponential distribution |
+| **Anderson-Darling test** | Test for normality (sensitive to tails) | Data is normally distributed | A² weighted by tail importance | • Continuous data<br>• More powerful than K-S | Testing if log-transformed data is normal |
+| **Jarque-Bera test** | Test normality via skewness/kurtosis | Skewness = 0, Kurtosis = 3 | JB = n(S²/6 + (K-3)²/24)<br>where:<br>• S = skewness<br>• K = kurtosis | • Large sample<br>• Based on moments | Quick normality check for large datasets |
 
-## Two-Sample Comparison Tests
+## Time Series Tests
 
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **Independent t-test** | Compares means of two independent groups<br>H₀: μ₁ = μ₂<br>H₁: μ₁ ≠ μ₂ | • Normal distribution<br>• Independent samples<br>• Equal variances (classic)<br>• Continuous data | • A/B testing<br>• Comparing two algorithms<br>• Treatment vs control | Comparing accuracy of two different models on same dataset |
-| **Welch's t-test** | Compares means when variances unequal<br>H₀: μ₁ = μ₂<br>H₁: μ₁ ≠ μ₂ | • Normal distribution<br>• Independent samples<br>• Unequal variances allowed<br>• Continuous data | • Default choice over Student's t-test<br>• Robust to unequal variances | Comparing performance metrics between models trained on different data sizes |
-| **Paired t-test** | Compares means of paired/matched samples<br>H₀: μd = 0 (mean difference)<br>H₁: μd ≠ 0 | • Paired observations<br>• Differences normally distributed<br>• Continuous data | • Before/after measurements<br>• Matched pairs<br>• Same subjects tested twice | Comparing model performance before and after feature engineering on same test set |
-| **Mann-Whitney U Test** | Non-parametric alternative to independent t-test<br>H₀: Distributions are identical<br>H₁: Distributions differ | • Independent samples<br>• Ordinal or continuous data<br>• No normality assumption | • Non-normal data<br>• Ordinal data<br>• Robust to outliers | Comparing median inference times between CPU and GPU deployments |
-| **Wilcoxon Signed-Rank Test** | Non-parametric alternative to paired t-test<br>H₀: Median difference = 0<br>H₁: Median difference ≠ 0 | • Paired observations<br>• Continuous or ordinal data<br>• Symmetric distribution of differences | • Non-normal paired data<br>• Small sample sizes | Comparing ranking algorithms on same set of queries |
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **Augmented Dickey-Fuller** | Test for unit root (stationarity) | Series has unit root (non-stationary) | ADF statistic | • Time series data<br>• No structural breaks | Testing if stock prices are stationary |
+| **KPSS test** | Test for stationarity | Series is stationary | KPSS statistic | • Complements ADF<br>• Tests null of stationarity | Confirming time series stationarity |
+| **Ljung-Box test** | Test for autocorrelation | No autocorrelation up to lag k | Q = n(n+2)∑(ρ̂k²/(n-k))<br>where ρ̂k = autocorrelation at lag k | • Used on residuals<br>• Tests white noise | Testing if model residuals are white noise |
+| **Durbin-Watson test** | Test for first-order autocorrelation | No first-order autocorrelation | DW = ∑(et - et-1)²/∑et²<br>where et = residuals | • Linear regression<br>• First-order only | Detecting autocorrelation in regression residuals |
+| **Granger causality test** | Test if X predicts Y | X does not Granger-cause Y | F-statistic on restricted vs unrestricted model | • Stationary series<br>• Linear relationships | Testing if one feature helps predict another |
 
-## Multiple Group Comparison Tests
+## Model Comparison and ML-Specific Tests
 
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **One-way ANOVA** | Compares means across 3+ groups<br>H₀: μ₁ = μ₂ = ... = μₖ<br>H₁: At least one mean differs | • Normal distribution within groups<br>• Independent observations<br>• Equal variances<br>• Continuous dependent variable | • Comparing multiple algorithms<br>• Testing multiple treatments<br>• Factor has 3+ levels | Comparing accuracy across multiple classification algorithms |
-| **Two-way ANOVA** | Tests main effects and interaction of two factors<br>H₀: No main effects or interaction<br>H₁: Significant effects exist | • Normal distribution<br>• Independent observations<br>• Equal variances<br>• Balanced design preferred | • Two categorical factors<br>• Testing interactions<br>• Factorial experiments | Testing effects of algorithm type and dataset size on performance |
-| **Repeated Measures ANOVA** | Compares means when same subjects measured multiple times<br>H₀: μ₁ = μ₂ = ... = μₖ<br>H₁: At least one mean differs | • Sphericity assumption<br>• Normal distribution<br>• Same subjects across conditions | • Time series measurements<br>• Within-subject designs<br>• Longitudinal studies | Comparing model performance across multiple epochs during training |
-| **Kruskal-Wallis Test** | Non-parametric alternative to one-way ANOVA<br>H₀: All groups have same distribution<br>H₁: At least one distribution differs | • Independent samples<br>• Ordinal or continuous data<br>• 3+ groups | • Non-normal data<br>• Ordinal responses<br>• Robust analysis | Comparing median latencies across multiple model architectures |
-| **Friedman Test** | Non-parametric alternative to repeated measures ANOVA<br>H₀: All treatments have same effect<br>H₁: At least one treatment differs | • Related samples<br>• 3+ measurements<br>• Ordinal or continuous data | • Non-normal repeated measures<br>• Ranking data<br>• Blocked designs | Comparing multiple algorithms across different datasets |
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **Likelihood ratio test** | Compare nested models | Simpler model is adequate | LR = -2ln(L₀/L₁)<br>where L = likelihood | • Nested models<br>• Large sample | Comparing logistic regression models |
+| **DeLong's test** | Compare AUC/ROC curves | AUC₁ = AUC₂ | z based on covariance matrix | • Binary classification<br>• Same test set | Comparing classifier performance |
+| **McNemar's test** | Compare classifier accuracy | Equal misclassification rates | χ² = (b - c)²/(b + c)<br>where b, c = discordant predictions | • Paired predictions<br>• Binary outcomes | Comparing two models on same data |
+| **Cochran's Q test** | Compare multiple classifiers | All classifiers perform equally | Q = k(k-1)∑(Gj - Ḡ)²/∑Ri(k-Ri)<br>where k = number of classifiers | • Binary outcomes<br>• Same test set | Comparing multiple binary classifiers |
+| **Nemenyi test** | Post-hoc test after Friedman | No difference between pairs | CD = qα√(k(k+1)/6N)<br>where k = algorithms, N = datasets | • Following Friedman test<br>• Multiple comparisons | Identifying which algorithms differ significantly |
+| **Diebold-Mariano test** | Compare forecast accuracy | Equal predictive accuracy | DM = d̄/√(σ̂d²/T)<br>where d = loss differential | • Time series forecasts<br>• Various loss functions | Comparing time series model forecasts |
 
-## Correlation and Association Tests
+## Tests for Model Assumptions
 
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **Pearson Correlation** | Measures linear correlation<br>H₀: ρ = 0 (no linear correlation)<br>H₁: ρ ≠ 0 | • Continuous variables<br>• Linear relationship<br>• Bivariate normal distribution<br>• No outliers | • Feature correlation analysis<br>• Linear relationships<br>• Continuous variables | Identifying multicollinearity between features before regression |
-| **Spearman Correlation** | Measures monotonic correlation<br>H₀: ρₛ = 0 (no monotonic correlation)<br>H₁: ρₛ ≠ 0 | • Ordinal or continuous data<br>• Monotonic relationship<br>• No normality required | • Non-linear monotonic relationships<br>• Ordinal data<br>• Robust to outliers | Correlating feature importance rankings from different methods |
-| **Kendall's Tau** | Measures ordinal association<br>H₀: τ = 0 (no association)<br>H₁: τ ≠ 0 | • Ordinal or continuous data<br>• Smaller sample sizes<br>• Many tied values | • Ranking correlation<br>• Small samples<br>• Many ties | Comparing rankings of feature importance across models |
-| **Point-Biserial Correlation** | Correlation between binary and continuous variable<br>H₀: rpb = 0<br>H₁: rpb ≠ 0 | • One binary, one continuous variable<br>• Continuous variable normally distributed | • Feature-target correlation in binary classification<br>• Validating binary features | Measuring correlation between binary feature and continuous target |
-| **Chi-Square Test of Independence** | Tests association between categorical variables<br>H₀: Variables are independent<br>H₁: Variables are associated | • Categorical variables<br>• Expected frequencies ≥ 5<br>• Independent observations | • Feature selection for categorical data<br>• Testing dependencies | Testing if categorical features are independent before naive Bayes |
-| **Fisher's Exact Test** | Tests association for 2×2 tables with small samples<br>H₀: Variables are independent<br>H₁: Variables are associated | • 2×2 contingency table<br>• Small sample sizes<br>• Exact test | • Small sample categorical analysis<br>• When chi-square assumptions fail | Testing association between binary model predictions and rare events |
-
-## Variance and Distribution Tests
-
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **F-test** | Compares variances of two groups<br>H₀: σ₁² = σ₂²<br>H₁: σ₁² ≠ σ₂² | • Normal distributions<br>• Independent samples<br>• Sensitive to non-normality | • Testing homogeneity of variance<br>• Before t-tests<br>• Quality control | Comparing variance in predictions between two models |
-| **Levene's Test** | Tests equality of variances across groups<br>H₀: All variances equal<br>H₁: At least one variance differs | • Less sensitive to non-normality<br>• 2+ groups<br>• Continuous data | • Robust alternative to F-test<br>• Before ANOVA<br>• Multiple groups | Testing homoscedasticity assumption in regression residuals |
-| **Bartlett's Test** | Tests equality of variances (multiple groups)<br>H₀: All variances equal<br>H₁: At least one variance differs | • Normal distributions<br>• Very sensitive to non-normality<br>• 2+ groups | • When normality is certain<br>• Multiple group comparison | Comparing variability in ensemble model predictions |
-| **Brown-Forsythe Test** | Robust test for equality of variances<br>H₀: All variances equal<br>H₁: At least one variance differs | • Robust to non-normality<br>• Uses median instead of mean<br>• 2+ groups | • Non-normal data<br>• Robust analysis needed | Testing if different preprocessing methods affect prediction variance |
-| **Fligner-Killeen Test** | Non-parametric test for homogeneity of variances<br>H₀: All variances equal<br>H₁: At least one variance differs | • Non-parametric<br>• Very robust<br>• 2+ groups | • Highly non-normal data<br>• Ordinal scale possible | Comparing spread of errors across different data segments |
-
-## Goodness of Fit Tests
-
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **Chi-Square Goodness of Fit** | Tests if data follows expected distribution<br>H₀: Data follows expected distribution<br>H₁: Data does not follow expected distribution | • Categorical data<br>• Expected frequencies ≥ 5<br>• Independent observations | • Testing distributional assumptions<br>• Categorical outcomes<br>• Model validation | Testing if predicted class proportions match expected distribution |
-| **G-test** | Alternative to chi-square goodness of fit<br>H₀: Observed = Expected<br>H₁: Observed ≠ Expected | • Similar to chi-square<br>• Better for small samples<br>• Uses likelihood ratio | • Small sample sizes<br>• More accurate p-values | Comparing observed vs expected feature value distributions |
-| **Hosmer-Lemeshow Test** | Tests calibration of logistic regression<br>H₀: Model is well-calibrated<br>H₁: Model is not well-calibrated | • Binary outcomes<br>• Groups by predicted probabilities<br>• Large samples | • Logistic regression diagnostics<br>• Model calibration | Testing if predicted probabilities match observed frequencies |
-| **Cramér-von Mises Test** | Tests if data comes from specified distribution<br>H₀: Data follows specified distribution<br>H₁: Data does not follow | • Continuous data<br>• Known distribution parameters<br>• All parts of distribution weighted equally | • Alternative to K-S test<br>• Emphasis on whole distribution | Testing if residuals follow assumed error distribution |
-
-## Time Series and Sequential Tests
-
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **Augmented Dickey-Fuller Test** | Tests for unit root (stationarity)<br>H₀: Unit root present (non-stationary)<br>H₁: No unit root (stationary) | • Time series data<br>• No missing values<br>• Regular intervals | • Testing stationarity<br>• Before ARIMA modeling<br>• Feature engineering | Testing if time series features are stationary before modeling |
-| **KPSS Test** | Tests for stationarity (opposite null of ADF)<br>H₀: Data is stationary<br>H₁: Data has unit root | • Time series data<br>• Complements ADF test<br>• Different null hypothesis | • Confirming stationarity<br>• Used with ADF test | Double-checking stationarity of detrended features |
-| **Ljung-Box Test** | Tests for autocorrelation in residuals<br>H₀: No autocorrelation<br>H₁: Autocorrelation present | • Time series residuals<br>• Tests multiple lags jointly<br>• After model fitting | • Model diagnostic<br>• Residual analysis<br>• ARIMA validation | Testing if model residuals are white noise |
-| **Durbin-Watson Test** | Tests for first-order autocorrelation<br>H₀: No autocorrelation<br>H₁: Positive or negative autocorrelation | • Regression residuals<br>• Time-ordered data<br>• First-order only | • Regression diagnostics<br>• Time series regression | Detecting autocorrelation in linear model residuals |
-| **Run Test** | Tests for randomness in sequence<br>H₀: Sequence is random<br>H₁: Sequence is not random | • Binary or continuous data<br>• Sequential observations<br>• Non-parametric | • Testing randomness<br>• Model residuals<br>• Pattern detection | Testing if model errors show systematic patterns |
-
-## Machine Learning Specific Tests
-
-| Test Name | Purpose & Hypothesis | Assumptions & Requirements | When to Use | ML/DS Example |
-|-----------|---------------------|---------------------------|-------------|---------------|
-| **McNemar's Test** | Compares paired binary classifications<br>H₀: No difference in errors<br>H₁: Significant difference in errors | • Paired binary outcomes<br>• 2×2 contingency table<br>• Same test set | • Comparing classifiers<br>• Paired predictions<br>• Model selection | Comparing two classifiers on same test set |
-| **5x2cv Paired t-test** | Compares ML algorithms with cross-validation<br>H₀: No performance difference<br>H₁: Significant difference | • 5 iterations of 2-fold CV<br>• Reduces Type I error<br>• Continuous metrics | • Robust algorithm comparison<br>• Small datasets<br>• Conservative test | Comparing deep learning vs traditional ML on small dataset |
-| **Cochran's Q Test** | Compares multiple classifiers on binary outcomes<br>H₀: All classifiers perform equally<br>H₁: At least one differs | • 3+ classifiers<br>• Binary outcomes<br>• Same test set | • Multiple classifier comparison<br>• Binary problems<br>• Initial screening | Comparing multiple binary classifiers simultaneously |
-| **DeLong's Test** | Compares ROC AUC scores<br>H₀: AUC₁ = AUC₂<br>H₁: AUC₁ ≠ AUC₂ | • Binary classification<br>• Same test set<br>• Correlated ROC curves | • Comparing model discrimination<br>• Medical diagnostics<br>• Ranking models | Testing if one model has significantly better AUC than another |
-| **Permutation Test** | Non-parametric test for any statistic<br>H₀: No difference between groups<br>H₁: Significant difference | • Any metric<br>• No distributional assumptions<br>• Computationally intensive | • Custom metrics<br>• Small samples<br>• No assumptions | Testing if custom performance metric differs between models |
+| Test Name | Purpose | Null Hypothesis (H₀) | Test Statistic | Assumptions | Example Use Case |
+|-----------|---------|---------------------|----------------|-------------|------------------|
+| **Breusch-Pagan test** | Test homoscedasticity | Homoscedastic errors | LM = nR² from auxiliary regression | • Linear regression<br>• Large sample | Testing constant variance in residuals |
+| **White test** | Test homoscedasticity (general) | Homoscedastic errors | nR² from auxiliary regression with interactions | • No specific form<br>• Detects any heteroscedasticity | General heteroscedasticity test |
+| **Ramsey RESET test** | Test functional form | Model correctly specified | F-statistic on added polynomial terms | • Linear regression<br>• Tests omitted variables | Testing if model needs non-linear terms |
+| **Variance Inflation Factor** | Test multicollinearity | VIF < 10 (rule of thumb) | VIFᵢ = 1/(1-Rᵢ²)<br>where Rᵢ² from regression of Xᵢ on other X's | • Multiple regression<br>• Not a formal test | Detecting multicollinearity among features |
+| **Hosmer-Lemeshow test** | Goodness of fit for logistic regression | Model fits well | χ² based on observed vs expected in deciles | • Binary outcome<br>• Large sample | Testing logistic regression calibration |
